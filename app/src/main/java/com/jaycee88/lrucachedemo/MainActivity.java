@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
-                // 重写此方法来衡量每张图片的大小，默认返回图片数量。
+                // 计算每张图片byte大小的方法
+                // 注意：缓存的总容量和每个缓存对象的大小所用单位要一致。
                 return bitmap.getByteCount() / 1024;
             }
         };
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
             // 计算出实际宽高和目标宽高的比率
+            // 算法为Math.floor(x+0.5), 即将原来的数字加上0.5后再向下取整
             final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
             // 选择宽和高中最小的比率作为inSampleSize的值，这样可以保证最终图片的宽和高
